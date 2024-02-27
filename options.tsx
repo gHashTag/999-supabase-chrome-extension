@@ -1,4 +1,5 @@
 import type { Provider, User } from "@supabase/supabase-js"
+import { Button, IconKey, IconMail, Input, Typography } from "@supabase/ui"
 import { useEffect, useState } from "react"
 
 import { sendToBackground } from "@plasmohq/messaging"
@@ -6,6 +7,8 @@ import { Storage } from "@plasmohq/storage"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import { supabase } from "~core/supabase"
+
+const { Title, Text, Link } = Typography
 
 function IndexOptions() {
   const [user, setUser] = useStorage<User>({
@@ -101,54 +104,75 @@ function IndexOptions() {
         }}>
         {user && (
           <>
-            <h3>
+            <Title level={5}>
               {user.email} - {user.id}
-            </h3>
-            <button
-              onClick={() => {
+            </Title>
+
+            <Button
+              block
+              placeholder="LOGOUT"
+              onClick={(e) => {
                 supabase.auth.signOut()
                 setUser(null)
-              }}>
-              Logout
-            </button>
+              }}
+              size="large"
+              type="primary">
+              LOG OUT
+            </Button>
           </>
         )}
         {!user && (
           <>
-            <label>Email</label>
-            <input
-              type="text"
-              placeholder="Your Username"
+            <Input
+              label="Email"
+              placeholder="john@digweed.com"
+              icon={<IconMail />}
+              type="email"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              style={{ marginBottom: "10px" }}
             />
-            <label>Password</label>
-            <input
+            <Input
+              label="Password"
+              placeholder="******************"
+              icon={<IconKey />}
               type="password"
-              placeholder="Your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              style={{ marginBottom: "10px" }}
             />
-
-            <button
+            <Button
+              block
+              placeholder="SIGNUP"
               onClick={(e) => {
                 handleEmailLogin("SIGNUP", username, password)
-              }}>
-              Sign up
-            </button>
-            <button
+              }}
+              size="large"
+              type="primary"
+              style={{ marginBottom: "10px" }}>
+              SIGNUP
+            </Button>
+            <Button
+              block
+              placeholder="LOGIN"
               onClick={(e) => {
                 handleEmailLogin("LOGIN", username, password)
-              }}>
-              Login
-            </button>
+              }}
+              size="large"
+              type="primary">
+              LOGIN
+            </Button>
 
-            <button
+            {/* <Button
+              block
+              placeholder="GITHUB"
               onClick={(e) => {
                 handleOAuthLogin("github")
-              }}>
+              }}
+              size="large"
+              type="default">
               Sign in with GitHub
-            </button>
+            </Button> */}
           </>
         )}
       </div>
