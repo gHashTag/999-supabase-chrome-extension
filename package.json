@@ -6,6 +6,7 @@
   "author": "Plasmo Corp. <foss@plasmo.com>",
   "scripts": {
     "dev": "plasmo dev",
+    "debug": "plasmo dev --verbose",
     "build": "plasmo build",
     "package": "plasmo package"
   },
@@ -31,6 +32,30 @@
     "key": "$CRX_KEY",
     "host_permissions": [
       "https://*/*"
+    ],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "permissions": [
+      "storage",
+      "downloads"
+    ],
+    "content_security_policy": {
+      "extension_pages": "script-src 'self'; object-src 'self'"
+    },
+    "content_scripts": [
+      {
+        "js": [
+          "../content.js"
+        ],
+        "run_at": "document_end",
+        "matches": [
+          "https://meet.google.com/*"
+        ],
+        "exclude_matches": [
+          "https://meet.google.com/"
+        ]
+      }
     ],
     "web_accessible_resources": [
       {
