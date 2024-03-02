@@ -74,14 +74,14 @@ function IndexOptions() {
     }
   }
 
-  const handleOAuthLogin = async (provider: Provider, scopes = "email") => {
-    await supabase.auth.signInWithOAuth({
-      provider,
-      options: {
-        scopes,
-        redirectTo: location.href
-      }
-    })
+  const getItems = async () => {
+    const { data, error } = await supabase
+      .from("test")
+      .insert([{ title: "someValue" }])
+      .select()
+
+    console.log("data", data)
+    console.log("error", error)
   }
 
   return (
@@ -104,6 +104,15 @@ function IndexOptions() {
         }}>
         {user && (
           <>
+            <Button
+              block
+              placeholder="Создать встречу"
+              onClick={() => getItems()}
+              size="large"
+              type="primary">
+              Создать встречу
+            </Button>
+
             <Title level={5}>
               {user.email} - {user.id}
             </Title>

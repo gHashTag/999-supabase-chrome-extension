@@ -1,4 +1,7 @@
+import { supabase } from "~core/supabase"
+
 let transcript = []
+
 let personNameBuffer = "",
   transcriptTextBuffer = ""
 let beforePersonName = "",
@@ -15,10 +18,29 @@ let meetingStartTimeStamp = new Date()
   .toLocaleString("default", options)
   .replace(/[/:]/g, "-")
 let meetingTitle = document.title
+
+async function onMeetingEnd() {
+  console.log("onMeetingEnd")
+  // Вывод в консоль всего диалога встречи
+  transcript.forEach((item) => {
+    console.log(`${item.personName}: ${item.personTranscript}`)
+  })
+  console.log("JSON.stringify(transcript)", JSON.stringify(transcript))
+  const { data, error } = await supabase
+    .from("test")
+    .insert([{ title: JSON.stringify(transcript) }])
+    .select()
+
+  console.log("data", data)
+  console.log("error", error)
+
+  // Здесь может идти код для сохранения транскрипта или его дальнейшей обработки
+}
+
 const extensionStatusJSON_bug = {
   status: 400,
   message:
-    "<strong>Srumy seems to have an error</strong> <br /> Please report it <a href='https://github.com/gHashTag/gHashTag/issues' target='_blank'>here</a>."
+    "<strong>999 seems to have an error</strong> <br /> Please report it <a href='https://github.com/gHashTag/gHashTag/issues' target='_blank'>here</a>."
 }
 
 checkExtensionStatus().then(() => {
@@ -62,7 +84,7 @@ checkExtensionStatus().then(() => {
                 showNotification({
                   status: 400,
                   message:
-                    "<strong>Srumy is not running</strong> <br /> Turn on captions using the CC icon, if needed"
+                    "<strong>999 is not running</strong> <br /> Turn on captions using the CC icon, if needed"
                 })
               else showNotification(extensionStatusJSON)
             })
@@ -76,6 +98,7 @@ checkExtensionStatus().then(() => {
             ".google-material-icons",
             "call_end"
           )[0].parentElement.addEventListener("click", () => {
+            console.log("window.removeEventListener")
             window.removeEventListener("beforeunload", beforeUnloadCallback)
             observer.disconnect()
             if (personNameBuffer != "" && transcriptTextBuffer != "")
@@ -88,6 +111,7 @@ checkExtensionStatus().then(() => {
               },
               function () {
                 console.log(`Transcript length ${transcript.length}`)
+                onMeetingEnd()
                 if (transcript.length > 0) {
                   chrome.runtime.sendMessage(
                     { type: "download" },
@@ -190,6 +214,7 @@ const commonCSS = `background: rgb(255 255 255 / 25%);
     box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;`
 
 function beforeUnloadCallback() {
+  console.log("beforeUnloadCallback")
   if (personNameBuffer != "" && transcriptTextBuffer != "") pushToTranscript()
   chrome.runtime.sendMessage(
     {
@@ -218,7 +243,7 @@ function transcriber(mutationsList, observer) {
         const person = people[people.length - 1]
         if (!person.childNodes[0] || !person.childNodes[1]?.lastChild) {
           console.log(
-            "There is a bug in Srumy. Please report it at https://github.com/vivek-nexus/Srumy/issues"
+            "There is a bug in 999. Please report it at https://github.com/gHashTag/999-supabase-chrome-extension/issues"
           )
           showNotification(extensionStatusJSON_bug)
           return
@@ -297,15 +322,17 @@ async function checkExtensionStatus() {
   chrome.storage.local.set({
     extensionStatusJSON: {
       status: 200,
-      message:
-        "<strong>Srumy is running</strong> <br /> Do not turn off captions"
+      message: "<strong>999 is running</strong> <br /> Do not turn off captions"
     }
   })
 
   // https://stackoverflow.com/a/42518434
-  await fetch("https://ejnana.github.io/transcripto-status/status-prod.json", {
-    cache: "no-store"
-  })
+  await fetch(
+    "https://raw.githubusercontent.com/gHashTag/999-supabase-chrome-extension/main/status-prod.json",
+    {
+      cache: "no-store"
+    }
+  )
     .then((response) => response.json())
     .then((result) => {
       // Write status to chrome local storage
