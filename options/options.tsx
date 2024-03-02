@@ -43,9 +43,9 @@ function Options() {
       <Web3AuthProvider chain={chain} web3AuthNetwork={web3AuthNetwork}>
         <h1 className={styles.title}>
           <a target="_blank" href="http://web3auth.io/" rel="noreferrer">
-            Web3Auth
-          </a>{" "}
-          & ReactJS Example
+            999
+          </a>
+          Kingdom
         </h1>
         <Setting
           setNetwork={networkChangeHandler}
@@ -63,7 +63,7 @@ function Options() {
           Source code {"  "}
           <img
             className={styles.logo}
-            src="/images/github-logo.png"
+            src="https://create-react-app.dev/img/logo.svg"
             alt="github-logo"
           />
         </a>
